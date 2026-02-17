@@ -44,14 +44,10 @@ class SentimentService:
             llm_data = await self._analyze_with_llm(ticker)
         except json.JSONDecodeError as exc:
             logger.error("sentiment_parse_error", ticker=ticker, error=str(exc))
-            raise AppError(
-                f"Failed to parse sentiment analysis for {ticker}"
-            ) from exc
+            raise AppError(f"Failed to parse sentiment analysis for {ticker}") from exc
         except Exception as exc:
             logger.error("sentiment_llm_error", ticker=ticker, error=str(exc))
-            raise AppError(
-                f"Failed to analyze sentiment for {ticker}: {exc}"
-            ) from exc
+            raise AppError(f"Failed to analyze sentiment for {ticker}: {exc}") from exc
 
         return self._build_result(ticker, llm_data)
 

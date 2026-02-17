@@ -58,15 +58,11 @@ class TransactionService:
             raise NotFoundError("Transaction", transaction_id)
         return self._to_response(row)
 
-    async def list_transactions(
-        self, filters: TransactionFilter
-    ) -> list[TransactionResponse]:
+    async def list_transactions(self, filters: TransactionFilter) -> list[TransactionResponse]:
         rows = await self._repo.list_filtered(filters)
         return [self._to_response(row) for row in rows]
 
-    async def update(
-        self, transaction_id: str, data: TransactionUpdate
-    ) -> TransactionResponse:
+    async def update(self, transaction_id: str, data: TransactionUpdate) -> TransactionResponse:
         existing = await self._repo.get_by_id(transaction_id)
         if existing is None or existing["is_deleted"]:
             raise NotFoundError("Transaction", transaction_id)
@@ -103,9 +99,7 @@ class TransactionService:
 
         logger.info("transaction_deleted", transaction_id=transaction_id)
 
-    async def get_summary(
-        self, year_month: str | None = None
-    ) -> list[MonthlySummary]:
+    async def get_summary(self, year_month: str | None = None) -> list[MonthlySummary]:
         rows = await self._repo.get_summary(year_month)
         return [
             MonthlySummary(
@@ -122,9 +116,7 @@ class TransactionService:
         rows = await self._repo.get_recent(months)
         return [self._to_response(row) for row in rows]
 
-    async def get_spending_trend(
-        self, category: str, months: int = 6
-    ) -> list[dict]:
+    async def get_spending_trend(self, category: str, months: int = 6) -> list[dict]:
         return await self._repo.get_spending_trend(category, months)
 
     async def calculate_savings_rate(self, months: int = 3) -> dict:

@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import aiosqlite
 import structlog
 
@@ -73,6 +75,7 @@ DDL_STATEMENTS = [
 
 async def init_database() -> None:
     global _db
+    Path(settings.db_path).parent.mkdir(parents=True, exist_ok=True)
     _db = await aiosqlite.connect(settings.db_path)
     _db.row_factory = aiosqlite.Row
     await _db.execute("PRAGMA journal_mode=WAL")

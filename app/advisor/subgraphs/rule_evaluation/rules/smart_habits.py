@@ -80,7 +80,8 @@ def measure_in_hours(ctx: dict) -> RuleResult:
     transactions = ctx.get("transactions", [])
     discretionary_cats = {"entertainment", "clothing", "gifts"}
     big_discretionary = [
-        t for t in transactions
+        t
+        for t in transactions
         if t.get("category") in discretionary_cats
         and t.get("type") == "expense"
         and t.get("amount", 0) > hourly_wage * 4
@@ -133,8 +134,11 @@ def leverage_good_debt(ctx: dict) -> RuleResult:
         f"Debt-to-income ratio is {ratio:.1%} — within the healthy 36% guideline."
         if triggered
         else f"Debt-to-income is {ratio:.1%}. "
-        + ("Consider using strategic debt to build assets." if ratio == 0
-           else "Ratio exceeds 36% — work on reducing debt.")
+        + (
+            "Consider using strategic debt to build assets."
+            if ratio == 0
+            else "Ratio exceeds 36% — work on reducing debt."
+        )
     )
     return RuleResult(
         rule_id="SH-03",
@@ -281,8 +285,7 @@ def overpay_for_quality(ctx: dict) -> RuleResult:
     transactions = ctx.get("transactions", [])
     durable_cats = {"clothing", "health", "education"}
     durable_txns = [
-        t for t in transactions
-        if t.get("category") in durable_cats and t.get("type") == "expense"
+        t for t in transactions if t.get("category") in durable_cats and t.get("type") == "expense"
     ]
 
     if not durable_txns:
@@ -383,7 +386,7 @@ def emotional_detachment(ctx: dict) -> RuleResult:
 
     avg_rate = sum(savings_rates) / len(savings_rates)
     variance = sum((r - avg_rate) ** 2 for r in savings_rates) / len(savings_rates)
-    std_dev = variance ** 0.5
+    std_dev = variance**0.5
 
     triggered = std_dev < 0.10 and avg_rate > 0
     severity = RuleSeverity.info if triggered else RuleSeverity.warning
@@ -561,8 +564,7 @@ def envy_as_motivation(ctx: dict) -> RuleResult:
         return _insufficient_data("SH-13", "Envy as Motivation", "insufficient income data")
 
     improving = all(
-        savings_rates[i] >= savings_rates[i - 1] - 1
-        for i in range(1, len(savings_rates))
+        savings_rates[i] >= savings_rates[i - 1] - 1 for i in range(1, len(savings_rates))
     )
     overall_trend = savings_rates[-1] - savings_rates[0]
 

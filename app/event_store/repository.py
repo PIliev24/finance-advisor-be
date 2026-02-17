@@ -38,9 +38,7 @@ class EventRepository:
             version=event.version,
         )
 
-    async def get_by_aggregate(
-        self, aggregate_type: str, aggregate_id: str
-    ) -> list[Event]:
+    async def get_by_aggregate(self, aggregate_type: str, aggregate_id: str) -> list[Event]:
         cursor = await self._db.execute(
             """
             SELECT event_id, aggregate_type, aggregate_id, event_type,
@@ -66,9 +64,7 @@ class EventRepository:
             for row in rows
         ]
 
-    async def get_all(
-        self, aggregate_type: str | None = None, limit: int = 100
-    ) -> list[Event]:
+    async def get_all(self, aggregate_type: str | None = None, limit: int = 100) -> list[Event]:
         if aggregate_type is not None:
             cursor = await self._db.execute(
                 """

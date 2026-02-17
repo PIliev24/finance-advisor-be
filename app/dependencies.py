@@ -4,7 +4,7 @@ import aiosqlite
 from fastapi import Depends
 
 from app.advisor.service import AdvisorService
-from app.auth import verify_api_key
+from app.auth import verify_token
 from app.budgets.repository import BudgetRepository
 from app.budgets.service import BudgetService
 from app.context.repository import ContextRepository
@@ -20,7 +20,7 @@ from app.transactions.repository import TransactionRepository
 from app.transactions.service import TransactionService
 
 DBConn = Annotated[aiosqlite.Connection, Depends(get_db)]
-APIKey = Annotated[str, Depends(verify_api_key)]
+APIKey = Annotated[dict, Depends(verify_token)]
 
 
 def get_event_store() -> EventStoreService:

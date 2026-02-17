@@ -67,18 +67,13 @@ class TradeService:
 
         logger.info("trades_get_recommendations", tickers=tickers, risk_tolerance=risk_tolerance)
 
-        tasks = [
-            self._get_recommendation_for_ticker(ticker, risk_tolerance)
-            for ticker in tickers
-        ]
+        tasks = [self._get_recommendation_for_ticker(ticker, risk_tolerance) for ticker in tickers]
         results = await asyncio.gather(*tasks, return_exceptions=True)
 
         recommendations = []
         for ticker, result in zip(tickers, results, strict=False):
             if isinstance(result, Exception):
-                logger.warning(
-                    "trade_recommendation_failed", ticker=ticker, error=str(result)
-                )
+                logger.warning("trade_recommendation_failed", ticker=ticker, error=str(result))
                 continue
             recommendations.append(result)
 
@@ -121,9 +116,7 @@ class TradeService:
         try:
             response = await self._llm.ainvoke([HumanMessage(content=prompt)])
             content = (
-                response.content
-                if isinstance(response.content, str)
-                else str(response.content)
+                response.content if isinstance(response.content, str) else str(response.content)
             )
             data = _parse_llm_json(content)
         except json.JSONDecodeError as exc:

@@ -15,14 +15,11 @@ def _fetch_ticker_info(ticker: str) -> dict:
     """Fetch ticker info synchronously (to be run in a thread)."""
     t = yf.Ticker(ticker)
     info = t.info
-    has_no_data = (
-        not info
-        or (
-            info.get("trailingPegRatio") is None
-            and info.get("regularMarketPrice") is None
-            and not info.get("shortName")
-            and not info.get("regularMarketPrice")
-        )
+    has_no_data = not info or (
+        info.get("trailingPegRatio") is None
+        and info.get("regularMarketPrice") is None
+        and not info.get("shortName")
+        and not info.get("regularMarketPrice")
     )
     if has_no_data:
         raise NotFoundError("Ticker", ticker)

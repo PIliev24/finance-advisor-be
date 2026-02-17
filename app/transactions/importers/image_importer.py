@@ -87,9 +87,7 @@ class ImageImporter(ImporterBase):
         for idx, item in enumerate(items):
             try:
                 txn = self._item_to_transaction(item)
-                key = self.generate_idempotency_key(
-                    txn.date, txn.amount, txn.description
-                )
+                key = self.generate_idempotency_key(txn.date, txn.amount, txn.description)
                 transactions.append(txn)
                 idempotency_keys.append(key)
             except (ValueError, KeyError) as exc:

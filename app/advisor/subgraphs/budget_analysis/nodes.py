@@ -41,13 +41,15 @@ async def calculate_utilization(state: BudgetAnalysisState) -> dict:
         usage = all_usage.get(category, 0.0)
         util_ratio = usage / limit if limit > 0 else 0.0
 
-        utilization.append({
-            "category": category,
-            "monthly_limit": limit,
-            "current_usage": round(usage, 2),
-            "utilization_pct": round(util_ratio * 100, 2),
-            "utilization_ratio": round(util_ratio, 4),
-        })
+        utilization.append(
+            {
+                "category": category,
+                "monthly_limit": limit,
+                "current_usage": round(usage, 2),
+                "utilization_pct": round(util_ratio * 100, 2),
+                "utilization_ratio": round(util_ratio, 4),
+            }
+        )
 
     logger.info("calculate_utilization", budgets_evaluated=len(utilization))
     return {"utilization": utilization}
@@ -72,13 +74,15 @@ async def generate_alerts(state: BudgetAnalysisState) -> dict:
         else:
             level = "warning"
 
-        alerts.append({
-            "category": item["category"],
-            "monthly_limit": item["monthly_limit"],
-            "current_usage": item["current_usage"],
-            "utilization_pct": item["utilization_pct"],
-            "alert_level": level,
-        })
+        alerts.append(
+            {
+                "category": item["category"],
+                "monthly_limit": item["monthly_limit"],
+                "current_usage": item["current_usage"],
+                "utilization_pct": item["utilization_pct"],
+                "alert_level": level,
+            }
+        )
 
     logger.info("generate_alerts", alert_count=len(alerts))
     return {"alerts": alerts}

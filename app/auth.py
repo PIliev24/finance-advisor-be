@@ -1,10 +1,19 @@
-from fastapi import Header
+import jwt
+from fastapi import Depends
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from app.config import settings
-from app.exceptions import AppError
+from app.exceptions import UnauthorizedError
+
+_bearer = HTTPBearer()
 
 
-async def verify_api_key(x_api_key: str = Header()) -> str:
-    if x_api_key != settings.api_key:
-        raise AppError("Invalid API key", code="UNAUTHORIZED")
-    return x_api_key
+async def verify_token(
+    credentials: HTTPAuthorizationCredentials = Depends(_bearer),  # noqa: B008
+) -> dict:
+    try:
+        return jwt.decode(credentials.credentials, settings.jwt_secret, algorithms=["HS256"])
+    except jwt.ExpiredSignatureError:
+        raise UnauthorizedError("Token has expired") from None
+    except jwt.InvalidTokenError:
+        raise UnauthorizedError("Invalid token") from None

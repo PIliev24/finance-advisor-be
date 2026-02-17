@@ -21,20 +21,14 @@ class LLMFactory:
             case LLMProvider.OPENAI:
                 api_key = settings.openai_api_key
                 if not api_key:
-                    raise AppError(
-                        "OpenAI API key is not configured", code="LLM_CONFIG_ERROR"
-                    )
+                    raise AppError("OpenAI API key is not configured", code="LLM_CONFIG_ERROR")
                 return ChatOpenAI(model=model, api_key=api_key, **kwargs)  # type: ignore[arg-type]
 
             case LLMProvider.ANTHROPIC:
                 api_key = settings.anthropic_api_key
                 if not api_key:
-                    raise AppError(
-                        "Anthropic API key is not configured", code="LLM_CONFIG_ERROR"
-                    )
+                    raise AppError("Anthropic API key is not configured", code="LLM_CONFIG_ERROR")
                 return ChatAnthropic(model=model, api_key=api_key, **kwargs)  # type: ignore[arg-type]
 
             case _:
-                raise AppError(
-                    f"Unknown LLM provider: '{provider}'", code="LLM_CONFIG_ERROR"
-                )
+                raise AppError(f"Unknown LLM provider: '{provider}'", code="LLM_CONFIG_ERROR")

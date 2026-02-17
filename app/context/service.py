@@ -56,9 +56,7 @@ class ContextService:
         events = await self._repo.list_all()
         return [self._build_response(e) for e in events]
 
-    async def update_event(
-        self, event_id: str, data: LifeEventUpdate
-    ) -> LifeEventResponse:
+    async def update_event(self, event_id: str, data: LifeEventUpdate) -> LifeEventResponse:
         existing = await self._repo.get_by_id(event_id)
         if not existing:
             raise NotFoundError("LifeEvent", event_id)
@@ -117,9 +115,7 @@ class ContextService:
 
     async def get_profile(self) -> UserProfile:
         profile_data = await self._repo.get_profile()
-        life_events = [
-            self._build_response(e) for e in profile_data["life_events"]
-        ]
+        life_events = [self._build_response(e) for e in profile_data["life_events"]]
         return UserProfile(
             life_events=life_events,
             summary=profile_data["summary"],

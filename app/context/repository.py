@@ -37,9 +37,7 @@ class ContextRepository:
                     desc += f" (impact: {event['impact']})"
                 event_descriptions.append(desc)
             summary = (
-                f"User has {len(events)} life event(s): "
-                + "; ".join(event_descriptions)
-                + "."
+                f"User has {len(events)} life event(s): " + "; ".join(event_descriptions) + "."
             )
 
         return {

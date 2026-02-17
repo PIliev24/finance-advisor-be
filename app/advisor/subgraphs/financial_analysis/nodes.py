@@ -69,12 +69,14 @@ async def compute_spending_trends(state: FinancialAnalysisState) -> dict:
             if prev_expenses > 0
             else 0.0
         )
-        trends.append({
-            "year_month": ym,
-            "total_income": round(data["total_income"], 2),
-            "total_expenses": round(data["total_expenses"], 2),
-            "mom_change_pct": round(mom_change, 2),
-        })
+        trends.append(
+            {
+                "year_month": ym,
+                "total_income": round(data["total_income"], 2),
+                "total_expenses": round(data["total_expenses"], 2),
+                "mom_change_pct": round(mom_change, 2),
+            }
+        )
         prev_expenses = data["total_expenses"]
 
     logger.info("compute_spending_trends", months=len(trends))
@@ -97,11 +99,7 @@ async def compute_income_analysis(state: FinancialAnalysisState) -> dict:
         elif txn.get("type") == "expense":
             total_expenses += amount
 
-    savings_rate = (
-        (total_income - total_expenses) / total_income * 100
-        if total_income > 0
-        else 0.0
-    )
+    savings_rate = (total_income - total_expenses) / total_income * 100 if total_income > 0 else 0.0
 
     logger.info(
         "compute_income_analysis",

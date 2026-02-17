@@ -1,7 +1,13 @@
 from fastapi import Request
 from fastapi.responses import JSONResponse
 
-from app.exceptions import AppError, ConflictError, NotFoundError, ValidationError
+from app.exceptions import (
+    AppError,
+    ConflictError,
+    NotFoundError,
+    UnauthorizedError,
+    ValidationError,
+)
 
 
 async def app_error_handler(request: Request, exc: AppError) -> JSONResponse:
@@ -32,7 +38,15 @@ async def conflict_handler(request: Request, exc: ConflictError) -> JSONResponse
     )
 
 
+async def unauthorized_handler(request: Request, exc: UnauthorizedError) -> JSONResponse:
+    return JSONResponse(
+        status_code=401,
+        content={"error": exc.code, "message": exc.message},
+    )
+
+
 def register_exception_handlers(app):
+    app.add_exception_handler(UnauthorizedError, unauthorized_handler)
     app.add_exception_handler(NotFoundError, not_found_handler)
     app.add_exception_handler(ValidationError, validation_error_handler)
     app.add_exception_handler(ConflictError, conflict_handler)

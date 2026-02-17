@@ -78,8 +78,7 @@ def lifestyle_creep(ctx: dict) -> RuleResult:
 def car_payment_treadmill(ctx: dict) -> RuleResult:
     transactions = ctx.get("transactions", [])
     transport_txns = [
-        t for t in transactions
-        if t.get("category") == "transport" and t.get("type") == "expense"
+        t for t in transactions if t.get("category") == "transport" and t.get("type") == "expense"
     ]
     if len(transport_txns) < 3:
         return _insufficient_data("MT-02", "Car Payment Treadmill", "need 3+ transport expenses")
@@ -122,12 +121,15 @@ def car_payment_treadmill(ctx: dict) -> RuleResult:
 def minimum_payment_illusion(ctx: dict) -> RuleResult:
     transactions = ctx.get("transactions", [])
     debt_txns = [
-        t for t in transactions
+        t
+        for t in transactions
         if t.get("category") == "debt_payment" and t.get("type") == "expense"
     ]
     if len(debt_txns) < 2:
         return _insufficient_data(
-            "MT-03", "Minimum Payment Illusion", "need 2+ debt payments",
+            "MT-03",
+            "Minimum Payment Illusion",
+            "need 2+ debt payments",
         )
 
     rounded = [round(t.get("amount", 0), 0) for t in debt_txns]
@@ -171,8 +173,10 @@ def house_poor(ctx: dict) -> RuleResult:
     ratio = housing / total_income
 
     triggered = ratio > 0.30
-    severity = RuleSeverity.critical if ratio > 0.40 else (
-        RuleSeverity.warning if triggered else RuleSeverity.info
+    severity = (
+        RuleSeverity.critical
+        if ratio > 0.40
+        else (RuleSeverity.warning if triggered else RuleSeverity.info)
     )
     msg = (
         f"Housing costs are {ratio:.0%} of income — exceeds the 30% guideline."
@@ -239,7 +243,8 @@ def paying_for_convenience(ctx: dict) -> RuleResult:
     transactions = ctx.get("transactions", [])
     convenience_cats = {"food", "transport"}
     small_txns = [
-        t for t in transactions
+        t
+        for t in transactions
         if t.get("category") in convenience_cats
         and t.get("type") == "expense"
         and 0 < t.get("amount", 0) <= 20
@@ -333,8 +338,10 @@ def emergency_free(ctx: dict) -> RuleResult:
     months_covered = savings_amount / monthly_expenses if monthly_expenses > 0 else 0
 
     triggered = months_covered < 3
-    severity = RuleSeverity.critical if months_covered < 1 else (
-        RuleSeverity.warning if triggered else RuleSeverity.info
+    severity = (
+        RuleSeverity.critical
+        if months_covered < 1
+        else (RuleSeverity.warning if triggered else RuleSeverity.info)
     )
     msg = (
         f"Savings cover only ~{months_covered:.1f} months of expenses — "
@@ -370,8 +377,7 @@ def retail_therapy(ctx: dict) -> RuleResult:
     transactions = ctx.get("transactions", [])
     retail_cats = {"clothing", "entertainment", "gifts"}
     retail_txns = [
-        t for t in transactions
-        if t.get("category") in retail_cats and t.get("type") == "expense"
+        t for t in transactions if t.get("category") in retail_cats and t.get("type") == "expense"
     ]
 
     if not transactions:
@@ -466,7 +472,8 @@ def brand_loyalty_tax(ctx: dict) -> RuleResult:
         return _insufficient_data("MT-11", "Brand Loyalty Tax", "no expense data")
 
     expense_cats = {
-        k: v for k, v in spending.items()
+        k: v
+        for k, v in spending.items()
         if k not in {"salary", "freelance", "savings", "investments"} and v > 0
     }
     if not expense_cats:
@@ -478,8 +485,7 @@ def brand_loyalty_tax(ctx: dict) -> RuleResult:
     triggered = max_ratio > 0.50
     severity = RuleSeverity.warning if triggered else RuleSeverity.info
     msg = (
-        f"'{max_cat}' alone accounts for {max_ratio:.0%} of spending — "
-        "high concentration risk."
+        f"'{max_cat}' alone accounts for {max_ratio:.0%} of spending — high concentration risk."
         if triggered
         else f"Spending is reasonably diversified (top category: {max_cat} at {max_ratio:.0%})."
     )
@@ -509,11 +515,13 @@ def brand_loyalty_tax(ctx: dict) -> RuleResult:
 def side_hustle_trap(ctx: dict) -> RuleResult:
     transactions = ctx.get("transactions", [])
     freelance_income = sum(
-        t.get("amount", 0) for t in transactions
+        t.get("amount", 0)
+        for t in transactions
         if t.get("category") == "freelance" and t.get("type") == "income"
     )
     freelance_expense = sum(
-        t.get("amount", 0) for t in transactions
+        t.get("amount", 0)
+        for t in transactions
         if t.get("category") == "freelance" and t.get("type") == "expense"
     )
 

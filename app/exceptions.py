@@ -18,3 +18,8 @@ class ValidationError(AppError):
 class ConflictError(AppError):
     def __init__(self, message: str):
         super().__init__(message, code="CONFLICT")
+
+
+class UnauthorizedError(AppError):
+    def __init__(self, message: str = "Unauthorized"):
+        super().__init__(message, code="UNAUTHORIZED")

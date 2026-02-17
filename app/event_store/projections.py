@@ -224,7 +224,7 @@ class ProjectionEngine:
         await self._db.execute(
             f"""
             UPDATE budgets_projection
-            SET {', '.join(set_clauses)}
+            SET {", ".join(set_clauses)}
             WHERE id = ?
             """,
             params,
@@ -283,7 +283,7 @@ class ProjectionEngine:
         await self._db.execute(
             f"""
             UPDATE life_events_projection
-            SET {', '.join(set_clauses)}
+            SET {", ".join(set_clauses)}
             WHERE id = ?
             """,
             params,

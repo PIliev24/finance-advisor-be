@@ -33,9 +33,7 @@ class BudgetRepository:
                 "SELECT * FROM budgets_projection WHERE is_active = 1 ORDER BY category"
             )
         else:
-            cursor = await self._db.execute(
-                "SELECT * FROM budgets_projection ORDER BY category"
-            )
+            cursor = await self._db.execute("SELECT * FROM budgets_projection ORDER BY category")
         rows = await cursor.fetchall()
         return [dict(row) for row in rows]
 

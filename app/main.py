@@ -4,7 +4,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.advisor.router import router as advisor_router
+from app.auth_router import router as auth_router
 from app.budgets.router import router as budgets_router
+from app.config import settings
 from app.context.router import router as context_router
 from app.database import close_database, init_database
 from app.exception_handlers import register_exception_handlers
@@ -32,7 +34,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[o.strip() for o in settings.cors_origins.split(",")],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -40,6 +42,7 @@ app.add_middleware(
 
 register_exception_handlers(app)
 
+app.include_router(auth_router, prefix="/api/v1/auth", tags=["auth"])
 app.include_router(transactions_router, prefix="/api/v1/transactions", tags=["transactions"])
 app.include_router(budgets_router, prefix="/api/v1/budgets", tags=["budgets"])
 app.include_router(context_router, prefix="/api/v1/context", tags=["context"])
